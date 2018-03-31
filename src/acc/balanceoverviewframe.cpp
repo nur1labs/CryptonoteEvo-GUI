@@ -7,7 +7,7 @@
 #include <QClipboard>
 
 #include "balanceoverviewframe.h"
-#include "ui/ui_balanceoverviewframe.h"
+#include "ui_balanceoverviewframe.h"
 #include "wallet/walletmodel.h"
 #include "base/popup.h"
 

@@ -2,7 +2,7 @@
 // Licensed under the GNU Lesser General Public License. See LICENSE for details.
 
 #include "logframe.h"
-#include "ui/ui_logframe.h"
+#include "ui_logframe.h"
 
 #include <QFontDatabase>
 #include <QScrollBar>

@@ -16,7 +16,7 @@
 #include "MinerDelegate.h"
 #include "MinerModel.h"
 
-#include "ui/ui_MiningFrame.h"
+#include "ui_MiningFrame.h"
 
 namespace WalletGUI {
 

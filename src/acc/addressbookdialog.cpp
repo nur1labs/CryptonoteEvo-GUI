@@ -4,7 +4,7 @@
 #include "addressbookdialog.h"
 #include "addressbookmodel.h"
 
-#include "ui/ui_addressbookdialog.h"
+#include "ui_addressbookdialog.h"
 
 namespace WalletGUI {
 

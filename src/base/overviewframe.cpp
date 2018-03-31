@@ -9,7 +9,7 @@
 #include "overviewframe.h"
 #include "wallet/walletmodel.h"
 
-#include "ui/ui_overviewframe.h"
+#include "ui_overviewframe.h"
 
 namespace WalletGUI {
 

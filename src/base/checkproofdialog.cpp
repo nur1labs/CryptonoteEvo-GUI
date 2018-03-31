@@ -6,7 +6,7 @@
 #include <QJsonParseError>
 
 #include "checkproofdialog.h"
-#include "ui/ui_checkproofdialog.h"
+#include "ui_checkproofdialog.h"
 #include "rpc/rpcapi.h"
 #include "common.h"
 

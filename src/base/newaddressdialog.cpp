@@ -4,7 +4,7 @@
 #include "newaddressdialog.h"
 #include "acc/addressbookmodel.h"
 #include "acc/addressbookmanager.h"
-#include "ui/ui_newaddressdialog.h"
+#include "ui_newaddressdialog.h"
 
 namespace WalletGUI
 {

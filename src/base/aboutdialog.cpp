@@ -5,7 +5,7 @@
 
 #include "aboutdialog.h"
 #include "settings.h"
-#include "ui/ui_aboutdialog.h"
+#include "ui_aboutdialog.h"
 
 namespace WalletGUI {
 

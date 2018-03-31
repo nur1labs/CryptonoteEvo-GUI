@@ -6,7 +6,7 @@
 #include <QClipboard>
 
 #include "createproofdialog.h"
-#include "ui/ui_createproofdialog.h"
+#include "ui_createproofdialog.h"
 
 namespace WalletGUI
 {

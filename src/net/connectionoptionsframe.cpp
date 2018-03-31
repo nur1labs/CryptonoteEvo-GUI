@@ -10,7 +10,7 @@
 #include "base/settings.h"
 #include "base/common.h"
 
-#include "ui/ui_connectionoptionsframe.h"
+#include "ui_connectionoptionsframe.h"
 
 namespace WalletGUI {
 

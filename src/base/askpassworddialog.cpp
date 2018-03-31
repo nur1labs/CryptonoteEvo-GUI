@@ -2,7 +2,7 @@
 // Licensed under the GNU Lesser General Public License. See LICENSE for details.
 
 #include "askpassworddialog.h"
-#include "ui/ui_askpassworddialog.h"
+#include "ui_askpassworddialog.h"
 
 namespace WalletGUI
 {

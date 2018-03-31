@@ -4,7 +4,7 @@
 #include <QPushButton>
 
 #include "changepassworddialog.h"
-#include "ui/ui_changepassworddialog.h"
+#include "ui_changepassworddialog.h"
 
 namespace WalletGUI {
 

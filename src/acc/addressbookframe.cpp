@@ -12,8 +12,8 @@
 #include "questiondialog.h"
 #include "addressbookmodel.h"
 #include "newaddressdialog.h"
-#include "ui/ui_addressbookframe.h"
-#include "base/mainwindow.h"
+#include "ui_addressbookframe.h"
+#include "mainwindow.h"
 
 namespace WalletGUI
 {

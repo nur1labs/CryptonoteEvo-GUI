@@ -4,7 +4,7 @@
 #include <QPushButton>
 
 #include "connectselectiondialog.h"
-#include "ui/ui_connectselectiondialog.h"
+#include "ui_connectselectiondialog.h"
 
 namespace WalletGUI
 {

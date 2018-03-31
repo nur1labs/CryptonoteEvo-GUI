@@ -4,7 +4,7 @@
 #include <QDataWidgetMapper>
 
 #include "miningoverviewframe.h"
-#include "ui/ui_miningoverviewframe.h"
+#include "ui_miningoverviewframe.h"
 #include "MiningManager.h"
 #include "MinerModel.h"
 #include "wallet/walletmodel.h"

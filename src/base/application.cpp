@@ -11,15 +11,15 @@
 #include <QAuthenticator>
 
 #include "application.h"
-#include "signalhandler.h"
+#include "net/signalhandler.h"
 #include "log/logger.h"
 //#include "splashscreen.h"
 #include "mainwindow.h"
-#include "walletmodel.h"
+#include "wallet/walletmodel.h"
 #include "net/connectselectiondialog.h"
 #include "settings.h"
 #include "JsonRpc/JsonRpcClient.h"
-#include "MiningManager.h"
+#include "Miner/MiningManager.h"
 #include "acc/addressbookmanager.h"
 
 #include "changepassworddialog.h"
