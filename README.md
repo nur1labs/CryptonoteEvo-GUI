@@ -1,7 +1,7 @@
 # CryptonoteEvo-GUI
 cryptonote evo guiシステムツリー
 
-## Requirements
+## 要件
 
 1. Qt5 としょうかん</br>
 Ubuntuに必要なパッケージをすべてインストールするには、次のコマンドを使用します:
