@@ -4,8 +4,8 @@
 #include <QAuthenticator>
 
 #include "JsonRpcClient.h"
-#include "common.h"
-#include "rpcapi.h"
+#include "base/common.h"
+#include "rpc/rpcapi.h"
 
 using namespace std::placeholders;
 

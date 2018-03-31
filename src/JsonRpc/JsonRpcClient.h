@@ -18,7 +18,7 @@
 #include "JsonRpcResponse.h"
 #include "JsonRpcNotification.h"
 #include "JsonRpcObjectFactory.h"
-#include "rpcapi.h"
+#include "rpc/rpcapi.h"
 //#include "cryptonote/rpc_api.h"
 
 namespace JsonRpc {
