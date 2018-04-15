@@ -19,7 +19,7 @@ sudo apt install qt5-qmake qtbase5-dev qtbase5-dev-tools
 
 する
 
-### Linux
+### Linux & BSD's
 ```
 $ git clone https://github.com/FndNur1Labs/CryptonoteEvo.git
 $ cd CryptonoteEvo
