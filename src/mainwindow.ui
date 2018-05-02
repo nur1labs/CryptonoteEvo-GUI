@@ -791,7 +791,7 @@
   <customwidget>
    <class>WalletGUI::OverviewFrame</class>
    <extends>QFrame</extends>
-   <header>overviewframe.h</header>
+   <header>base/overviewframe.h</header>
    <container>1</container>
    <slots>
     <signal>copiedToClipboardSignal()</signal>
@@ -801,35 +801,35 @@
   <customwidget>
    <class>WalletGUI::WalletStatusBar</class>
    <extends>QStatusBar</extends>
-   <header>statusbar.h</header>
+   <header>base/statusbar.h</header>
   </customwidget>
   <customwidget>
    <class>WalletGUI::SendFrame</class>
    <extends>QFrame</extends>
-   <header>sendframe.h</header>
+   <header>base/sendframe.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>WalletGUI::MiningFrame</class>
    <extends>QFrame</extends>
-   <header>MiningFrame.h</header>
+   <header>Miner/MiningFrame.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>WalletGUI::WalletProgressBar</class>
    <extends>QProgressBar</extends>
-   <header>progressbar.h</header>
+   <header>base/progressbar.h</header>
   </customwidget>
   <customwidget>
    <class>WalletGUI::AddressBookFrame</class>
    <extends>QFrame</extends>
-   <header>addressbookframe.h</header>
+   <header>acc/addressbookframe.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>WalletGUI::LogFrame</class>
    <extends>QFrame</extends>
-   <header>logframe.h</header>
+   <header>log/logframe.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

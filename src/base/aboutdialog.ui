@@ -84,7 +84,7 @@
   <customwidget>
    <class>WalletGUI::WalletOkButton</class>
    <extends>QPushButton</extends>
-   <header>okbutton.h</header>
+   <header>base/okbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,5 +1,4 @@
-// Copyright (c) 2015-2018, The Bytecoin developers, [ ] developers.
-// Licensed under the GNU Lesser General Public License. See LICENSE for details.
+#include "contrib.hpp"
 
 #include <QApplication>
 #include <cstdio>

@@ -480,7 +480,7 @@
   <customwidget>
    <class>WalletGUI::PoolTreeView</class>
    <extends>QTableView</extends>
-   <header>PoolTreeView.h</header>
+   <header>Miner/PoolTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -161,7 +161,7 @@
   <customwidget>
    <class>WalletGUI::BalanceOverviewFrame</class>
    <extends>QFrame</extends>
-   <header>balanceoverviewframe.h</header>
+   <header>acc/balanceoverviewframe.h</header>
    <container>1</container>
    <slots>
     <signal>copiedToClipboardSignal()</signal>
@@ -170,7 +170,7 @@
   <customwidget>
    <class>WalletGUI::MiningOverviewFrame</class>
    <extends>QFrame</extends>
-   <header>miningoverviewframe.h</header>
+   <header>Miner/miningoverviewframe.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

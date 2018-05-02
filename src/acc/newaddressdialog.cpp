@@ -1,9 +1,6 @@
-// Copyright (c) 2015-2018, The Bytecoin developers, [ ] developers.
-// Licensed under the GNU Lesser General Public License. See LICENSE for details.
-
 #include "newaddressdialog.h"
-#include "acc/addressbookmodel.h"
-#include "acc/addressbookmanager.h"
+#include "addressbookmodel.h"
+#include "addressbookmanager.h"
 #include "ui_newaddressdialog.h"
 
 namespace WalletGUI

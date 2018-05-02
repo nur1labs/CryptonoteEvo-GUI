@@ -1,6 +1,3 @@
-// Copyright (c) 2015-2018, The Bytecoin developers, [ ] developers.
-// Licensed under the GNU Lesser General Public License. See LICENSE for details.
-
 #include <QApplication>
 #include <QClipboard>
 #include <QMenu>
@@ -9,7 +6,7 @@
 #include "addressbookframe.h"
 #include "addressbookdelegate.h"
 #include "addressbookmanager.h"
-#include "questiondialog.h"
+#include "base/questiondialog.h"
 #include "addressbookmodel.h"
 #include "newaddressdialog.h"
 #include "ui_addressbookframe.h"

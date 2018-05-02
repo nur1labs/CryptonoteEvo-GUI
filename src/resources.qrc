@@ -27,7 +27,7 @@
         <file alias="total_balance">icons/total_balance.png</file>
         <file alias="dark/balance">icons/balance.png</file>
         <file alias="dark/logo">icons/logo.png</file>
-        <file alias="light/logo">icons/logo_bl.png</file>
+        <file alias="light/logo">icons/logo_ev.png</file>
         <file alias="inp_clock1">icons/inp_clock1.png</file>
         <file alias="inp_clock2">icons/inp_clock2.png</file>
         <file alias="inp_clock3">icons/inp_clock3.png</file>
@@ -98,10 +98,10 @@
     </qresource>
     <qresource prefix="/images">
         <file alias="splash">images/splash.png</file>
-        <file alias="cryptonote_lin">images/cryptonote.png</file>
+        <file alias="cryptonote_lin">images/evonote.png</file>
         <file alias="add_address_helper">images/add_address_helper.png</file>
-        <file alias="cryptonote_mac">images/cryptonote.icns</file>
-        <file alias="cryptonote_win">images/cryptonote.ico</file>
+        <file alias="cryptonote_mac">images/evonote.icns</file>
+        <file alias="cryptonote_win">images/evonote.ico</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="qss">cryptonotewallet.qss</file>
