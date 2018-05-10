@@ -27,6 +27,8 @@ signals:
 
 private:
     Ui::WalletdParamsDialog *ui;
+
+    bool allowToRestart_;
 };
 
 }

@@ -8,9 +8,11 @@ namespace WalletGUI
 WalletdParamsDialog::WalletdParamsDialog(bool allowToRestart, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::WalletdParamsDialog)
+    , allowToRestart_(allowToRestart)
 {
     ui->setupUi(this);
-    ui->applyButton->setEnabled(allowToRestart);
+//    ui->applyButton->setEnabled(allowToRestart);
+    ui->applyButton->setText(allowToRestart_ ? tr("Save and restart walletd") : tr("Save"));
     ui->paramsEdit->setText(Settings::instance().getWalletdParams().join(QChar(' ')));
 }
 
@@ -27,7 +29,8 @@ void WalletdParamsDialog::saveParams()
 void WalletdParamsDialog::applyParams()
 {
     saveParams();
-    emit restartWalletd();
+    if (allowToRestart_)
+        emit restartWalletd();
 }
 
 }

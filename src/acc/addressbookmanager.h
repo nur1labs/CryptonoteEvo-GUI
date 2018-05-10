@@ -46,7 +46,9 @@ signals:
   void addressBookClosedSignal();
   void addressAddedSignal(AddressIndex _addressIndex);
   void addressEditedSignal(AddressIndex _addressIndex);
-  void addressRemovedSignal(AddressIndex _addressIndex);
+//  void addressRemovedSignal(AddressIndex _addressIndex);
+  void beginRemoveAddressSignal(AddressIndex _addressIndex);
+  void endRemoveAddressSignal();
 };
 
 }

@@ -2,7 +2,7 @@
 
 #include <QFrame>
 
-#include "IStream/IMiningManager.h"
+#include "ISeria/IMiningManager.h"
 
 class QPushButton;
 class QAbstractButton;

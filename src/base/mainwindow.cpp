@@ -18,10 +18,10 @@
 #include "mainwindow.h"
 
 #include "log/logger.h"
-#include "base/aboutdialog.h"
+#include "aboutdialog.h"
 #include "wallet/walletmodel.h"
-#include "base/settings.h"
-#include "base/common.h"
+#include "settings.h"
+#include "common.h"
 #include "JsonRpc/JsonRpcClient.h"
 #include "Miner/MinerModel.h"
 #include "Miner/MiningManager.h"
@@ -30,7 +30,7 @@
 #include "acc/addressbookmodel.h"
 #include "acc/addressbooksortedmodel.h"
 #include "net/sendconfirmationdialog.h"
-#include "base/popup.h"
+#include "popup.h"
 
 #include "ui_mainwindow.h"
 
@@ -39,9 +39,9 @@ namespace WalletGUI {
 namespace {
 
 //const int MAX_RECENT_WALLET_COUNT = 10;
-//const char COMMUNITY_FORUM_URL[] = "https://forum.nur1labs.net";
-const char COMMUNITY_FORUM_URL[] = "https://nur1labs.net";
-const char REPORT_ISSUE_URL[] = "https://nur1labs.net/contact";
+//const char COMMUNITY_FORUM_URL[] = "https://bytecointalk.org";
+const char COMMUNITY_FORUM_URL[] = "https://bytecoin.org";
+const char REPORT_ISSUE_URL[] = "https://bytecoin.org/contact";
 
 const char BUTTON_STYLE_SHEET[] =
         "QPushButton {border: none;}"
@@ -68,7 +68,7 @@ MainWindow::MainWindow(
     m_ui->setupUi(this);
 
     setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, this->size(), qApp->desktop()->availableGeometry()));
-    setWindowIcon(QIcon(":images/Cryptonote_lin"));
+    setWindowIcon(QIcon(":images/bytecoin_lin"));
     clearTitle();
 
     m_ui->m_overviewButton->setStyleSheet(BUTTON_STYLE_SHEET);
@@ -96,6 +96,7 @@ MainWindow::MainWindow(
 
     m_addressesMapper->setModel(walletModel_);
     m_addressesMapper->addMapping(m_ui->m_addressLabel, WalletModel::COLUMN_ADDRESS, "text");
+    m_addressesMapper->addMapping(m_ui->m_viewOnlyLabel, WalletModel::COLUMN_VIEW_ONLY, "text");
     m_addressesMapper->toFirst();
     connect(walletModel_, &QAbstractItemModel::modelReset, m_addressesMapper, &QDataWidgetMapper::toFirst);
 
@@ -133,6 +134,10 @@ MainWindow::MainWindow(
     m_ui->m_sendButton->setEnabled(false);
     m_ui->m_miningButton->setEnabled(false);
     m_ui->m_overviewButton->setEnabled(false);
+    m_ui->m_checkProofAction->setEnabled(false);
+    m_ui->m_changePasswordAction->setEnabled(false);
+    m_ui->m_exportKeysAction->setEnabled(false);
+    m_ui->m_exportViewOnlyKeysAction->setEnabled(false);
 
     m_ui->m_logButton->setChecked(true);
     m_ui->m_logFrame->show();
@@ -326,13 +331,18 @@ void MainWindow::showLog()
 
 void MainWindow::setTitle()
 {
+    clearTitle();
+#ifdef Q_OS_MAC
+    if (Settings::instance().getConnectionMethod() == ConnectionMethod::BUILTIN)
+        setWindowFilePath(Settings::instance().getWalletFile());
+    else
+        setWindowTitle(Settings::instance().getRpcEndPoint());
+#else
     const QString fileName =
             Settings::instance().getConnectionMethod() == ConnectionMethod::BUILTIN ?
                 Settings::instance().getWalletFile() :
                 Settings::instance().getRpcEndPoint();
-#ifdef Q_OS_MAC
-    setWindowFilePath(fileName);
-#else
+
     setWindowTitle(fileName);
 #endif
 }
@@ -341,6 +351,7 @@ void MainWindow::clearTitle()
 {
 #ifdef Q_OS_MAC
     setWindowFilePath(QString{});
+    setWindowTitle(QString{});
 #else
     setWindowTitle(QString{});
 #endif
@@ -357,12 +368,6 @@ void MainWindow::setConnectedState()
         m_ui->m_overviewButton->click();
 
     setTitle();
-#ifdef Q_OS_MAC
-    if (Settings::instance().getConnectionMethod() == ConnectionMethod::BUILTIN)
-        setWindowFilePath(Settings::instance().getWalletFile());
-    else
-        setWindowFilePath(Settings::instance().getRpcEndPoint());
-#endif
 }
 
 void MainWindow::setDisconnectedState()
@@ -380,16 +385,17 @@ void MainWindow::setDisconnectedState()
     m_miningManager->stopMining();
     m_ui->m_changePasswordAction->setEnabled(false);
     m_ui->m_checkProofAction->setEnabled(false);
+    m_ui->m_exportKeysAction->setEnabled(false);
+    m_ui->m_exportViewOnlyKeysAction->setEnabled(false);
 
     clearTitle();
-#ifdef Q_OS_MAC
-    setWindowFilePath(QString());
-#endif
 }
 
 void MainWindow::builtinRun()
 {
     m_ui->m_changePasswordAction->setEnabled(true);
+    m_ui->m_exportKeysAction->setEnabled(true);
+    m_ui->m_exportViewOnlyKeysAction->setEnabled(true);
 }
 
 void MainWindow::jsonErrorResponse(const QString& /*id*/, const QString& errorString)
@@ -424,9 +430,9 @@ void MainWindow::packetReceived(const QByteArray& data)
     m_ui->m_logFrame->addNetworkMessage(QString("<-- ") + QString::fromUtf8(data) + '\n');
 }
 
-void MainWindow::createProof(const QString& txHash)
+void MainWindow::createProof(const QString& txHash, bool needToFind)
 {
-    emit createProofSignal(txHash);
+    emit createProofSignal(txHash, needToFind);
 }
 
 void MainWindow::checkProof()
@@ -437,6 +443,16 @@ void MainWindow::checkProof()
 void MainWindow::showWalletdParams()
 {
     emit showWalletdParamsSignal();
+}
+
+void MainWindow::exportViewOnlyKeys()
+{
+    emit exportViewOnlyKeysSignal();
+}
+
+void MainWindow::exportKeys()
+{
+    emit exportKeysSignal();
 }
 
 }

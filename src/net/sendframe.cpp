@@ -5,8 +5,8 @@
 #include "sendframe.h"
 #include "transferframe.h"
 #include "wallet/walletmodel.h"
-#include "mainwindow.h"
-#include "common.h"
+#include "base/mainwindow.h"
+#include "base/common.h"
 #include "rpc/rpcapi.h"
 #include "acc/addressbookmanager.h"
 

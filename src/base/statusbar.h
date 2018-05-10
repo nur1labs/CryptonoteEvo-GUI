@@ -28,7 +28,7 @@ private:
 //    QLabel* m_encryptionStatusIconLabel;
     QLabel* m_peerCountLabel;
     QLabel* m_walletConnectionLabel;
-    QLabel* m_CryptonotedConnectionLabel;
+    QLabel* m_cryptonotedConnectionLabel;
     QMovie* m_syncMovie;
     QDataWidgetMapper* stateMapper_;
     bool isSynchronized_;

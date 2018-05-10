@@ -11,7 +11,7 @@ namespace WalletGUI {
 
 class MainWindow;
 
-class CrashDialog : private QDialog
+class CrashDialog : public QDialog
 {
     Q_OBJECT
 
@@ -22,8 +22,6 @@ public:
     void setMainWindow(MainWindow* mainWindow);
     int execWithReason(const QString& reason, bool enablePassword);
     QString getPassword() const;
-
-    using QDialog::accept;
 
 public slots:
     void showDaemonConsole();

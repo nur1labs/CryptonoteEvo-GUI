@@ -8,8 +8,8 @@
 #include "MiningFrame.h"
 #include "base/settings.h"
 #include "base/questiondialog.h"
-#include "IStream/IMiningManager.h"
-#include "IStream/IPoolMiner.h"
+#include "ISeria/IMiningManager.h"
+#include "ISeria/IPoolMiner.h"
 #include "MinerDelegate.h"
 #include "MinerModel.h"
 

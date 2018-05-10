@@ -11,7 +11,7 @@
 #include "acc/addressbookmodel.h"
 #include "acc/addressbookdialog.h"
 #include "acc/addressbookmanager.h"
-#include "common.h"
+#include "base/common.h"
 
 #include "ui_transferframe.h"
 

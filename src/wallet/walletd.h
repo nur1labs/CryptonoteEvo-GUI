@@ -3,6 +3,7 @@
 
 #include <QScopedPointer>
 #include <QProcess>
+#include <QTimer>
 
 #include "rpc/rpcapi.h"
 
@@ -72,12 +73,17 @@ signals:
 private:
     JsonRpc::WalletClient* jsonClient_;
     State state_;
-    int rerunTimerId_;
+//    int rerunTimerId_;
+//    int statusTimerId_;
+    QTimer rerunTimer_;
+    QTimer statusTimer_;
 
     void setState(State state);
-    void rerun();
-    virtual void timerEvent(QTimerEvent* event) override;
+//    void startRerunTimer();
+//    virtual void timerEvent(QTimerEvent* event) override;
     virtual void authRequired(QAuthenticator* authenticator);
+    void rerun();
+    void sendGetStatus();
 
 private slots:
     void statusReceived(const RpcApi::Status& status);
@@ -127,10 +133,10 @@ public:
 
     enum class ReturnCode
     {
-        CRYPTONOTED_DATABASE_ERROR = 101, // we hope we are out of diskspace, otherwise blockchain.db is corrupted
-        CRYPTONOTED_ALREADY_RUNNING = 102,
+        DATABASE_ERROR = 101, // we hope we are out of diskspace, otherwise blockchain.db is corrupted
+        ALREADY_RUNNING = 102,
         WALLETD_BIND_PORT_IN_USE = 103,
-        CRYPTONOTED_BIND_PORT_IN_USE = 104,
+        BIND_PORT_IN_USE = 104,
         WALLET_FILE_READ_ERROR = 205,
         WALLET_FILE_UNKNOWN_VERSION = 206,
         WALLET_FILE_DECRYPT_ERROR = 207,
@@ -138,12 +144,15 @@ public:
         WALLET_FILE_EXISTS = 209, // daemon never overwrites file during --generate-wallet
         WALLET_WITH_THE_SAME_VIEWKEY_IN_USE = 210, // another walletd instance is using the same wallet file or another wallet file with the same viewkey
         WALLETD_WRONG_ARGS = 211,
+        WALLETD_EXPORTKEYS_MORETHANONE = 212, // We can export keys only if wallet file contains exactly 1 spend keypair
     };
     Q_ENUM(ReturnCode)
 
 
     BuiltinWalletd(const QString& pathToWallet, bool createNew, QByteArray&& keys, QObject* parent = nullptr);
     virtual ~BuiltinWalletd() override;
+
+    static QString errorMessage(ReturnCode err);
 
     virtual void run() override;
     virtual void stop() override;
@@ -157,6 +166,10 @@ public:
     QString errorString() const;
     QProcess::ProcessError error() const;
 
+    void exportViewOnlyKeys(QWidget* parent/*, const QString& exportPath*/);
+    void exportKeys(QWidget* parent);
+
+
 signals:
     void daemonStandardOutputSignal(const QString& data);
     void daemonStandardErrorSignal(const QString& data);
@@ -169,12 +182,14 @@ signals:
     void stateChangedSignal(State oldState, State newState);
     void requestPasswordSignal();
     void requestPasswordWithConfirmationSignal();
+    void requestPasswordForExportSignal(QProcess* walletd, QString* pass);
 
 private:
     QProcess* walletd_;
     State state_;
     const QString pathToWallet_;
     QString password_;
+    QString newPassword_;
     bool createNew_;
     bool changePassword_;
     QByteArray keys_;

@@ -2,7 +2,7 @@
 # for ex.: export CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH:/Users/testnet/Qt/5.9.2/clang_64/lib/cmake"
 
 cmake_minimum_required(VERSION 3.11.0)
-project(evonote-gui)
+project(cryptonote-gui)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 find_package(Qt5Core REQUIRED)
@@ -24,7 +24,7 @@ endif()
 
 set(SOURCES
     src/main.cpp
-    src/mainwindow.cpp 
+    src/base/mainwindow.cpp 
     src/net/signalhandler.cpp 
     src/base/overviewframe.cpp 
     src/base/aboutdialog.cpp 
@@ -40,8 +40,8 @@ set(SOURCES
     src/base/statusbar.cpp 
     src/base/windoweditemmodel.cpp 
     src/wallet/walletmodel.cpp 
-    src/base/sendframe.cpp 
-    src/base/transferframe.cpp 
+    src/net/sendframe.cpp 
+    src/net/transferframe.cpp 
     src/base/resizablescrollarea.cpp 
     src/base/common.cpp 
     src/net/connectionoptionsframe.cpp 
@@ -72,12 +72,13 @@ set(SOURCES
     src/base/popup.cpp
     src/log/logframe.cpp
     src/base/askpassworddialog.cpp
-    src/base/importkeydialog.cpp
+    src/key/importkeydialog.cpp
     src/base/questiondialog.cpp
     src/Miner/PoolTreeView.cpp
     src/base/createproofdialog.cpp
     src/base/checkproofdialog.cpp
     src/wallet/walletdparamsdialog.cpp
+    src/key/exportkeydialog.cpp
 
 )
 
@@ -85,6 +86,6 @@ include_directories(${CMAKE_BINARY_DIR} src )
 include_directories(../evonote/include)
 include_directories(../evonote/src)
 link_directories(../evonote/libs)
-add_executable(evonote-gui ${SOURCES} src/resources.qrc)
-target_link_libraries(evonote-gui evonote-crypto)
-qt5_use_modules(evonote-gui Core Network Gui Widgets)
+add_executable(cryptonote-gui ${SOURCES} src/resources.qrc)
+target_link_libraries(cryptonote-gui evonote-crypto)
+qt5_use_modules(cryptonote-gui Core Network Gui Widgets)

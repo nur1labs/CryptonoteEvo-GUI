@@ -9,8 +9,8 @@
 
 #include <atomic>
 
-#include "IStream/IPoolClient.h"
-#include "IStream/IMinerWorker.h"
+#include "ISeria/IPoolClient.h"
+#include "ISeria/IMinerWorker.h"
 
 class QTcpSocket;
 

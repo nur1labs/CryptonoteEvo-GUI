@@ -5,7 +5,7 @@
 #include "checkproofdialog.h"
 #include "ui_checkproofdialog.h"
 #include "rpc/rpcapi.h"
-#include "common.h"
+#include "base/common.h"
 
 namespace WalletGUI
 {

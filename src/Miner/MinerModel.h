@@ -2,7 +2,7 @@
 
 #include <QAbstractItemModel>
 
-#include "IStream/IMiningManager.h"
+#include "ISeria/IMiningManager.h"
 
 namespace WalletGUI {
 

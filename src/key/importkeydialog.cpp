@@ -1,4 +1,5 @@
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "importkeydialog.h"
 #include "ui_importkeydialog.h"
@@ -23,7 +24,7 @@ ImportKeyDialog::~ImportKeyDialog()
 
 QByteArray ImportKeyDialog::getKey() const
 {
-    return QByteArray::fromHex(ui->keyEdit->toPlainText().toLatin1());
+    return QByteArray::fromHex(ui->keyEdit->toPlainText().toUtf8());
 }
 
 void ImportKeyDialog::loadKey()
@@ -33,14 +34,17 @@ void ImportKeyDialog::loadKey()
                 this,
                 tr("Load key from..."),
                 QDir::homePath(),
-                tr("Key file (*.*)"));
+                tr("Key file (*)"));
 
     if (filePath.isEmpty())
         return;
 
     QFile keyFile(filePath);
     if (!keyFile.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read key from the selected file."));
         return;
+    }
 
     key_ = keyFile.readAll();
     keyFile.close();

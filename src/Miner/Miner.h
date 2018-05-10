@@ -7,9 +7,9 @@
 
 #include <atomic>
 
-#include "IStream/IPoolMiner.h"
-#include "IStream/IMinerWorker.h"
-#include "IStream/IPoolClient.h"
+#include "ISeria/IPoolMiner.h"
+#include "ISeria/IMinerWorker.h"
+#include "ISeria/IPoolClient.h"
 
 namespace WalletGUI {
 

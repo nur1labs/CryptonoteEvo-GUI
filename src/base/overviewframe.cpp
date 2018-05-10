@@ -168,7 +168,8 @@ bool OverviewFrame::eventFilter(QObject* object, QEvent* event)
         const bool copyableColumns =
                 modelIndex.column() == WalletModel::COLUMN_HASH ||
                 (modelIndex.column() == WalletModel::COLUMN_BLOCK_HASH && !m_transactionsModel->data(modelIndex, WalletModel::ROLE_BLOCK_HASH).toString().isEmpty());
-        const bool proofColumn = (modelIndex.column() == WalletModel::COLUMN_PROOF && m_transactionsModel->data(modelIndex, WalletModel::ROLE_PROOF).toBool());
+        const bool proof = m_transactionsModel->data(modelIndex, WalletModel::ROLE_PROOF).toBool();
+        const bool proofColumn = (modelIndex.column() == WalletModel::COLUMN_PROOF/* && proof*/);
         const bool valid = copyableColumns || proofColumn;
         if(!valid)
             return false;
@@ -181,7 +182,7 @@ bool OverviewFrame::eventFilter(QObject* object, QEvent* event)
         if (proofColumn)
         {
             const QString txHash = m_transactionsModel->data(modelIndex, WalletModel::ROLE_HASH).toString();
-            emit createProofSignal(txHash);
+            emit createProofSignal(txHash, !proof);
         }
     }
     else if (event->type() == QEvent::MouseMove)
@@ -192,7 +193,7 @@ bool OverviewFrame::eventFilter(QObject* object, QEvent* event)
         const bool showHandCursor =
                 modelIndex.column() == WalletModel::COLUMN_HASH ||
                 (modelIndex.column() == WalletModel::COLUMN_BLOCK_HASH && !m_transactionsModel->data(modelIndex, WalletModel::ROLE_BLOCK_HASH).toString().isEmpty()) ||
-                (modelIndex.column() == WalletModel::COLUMN_PROOF && m_transactionsModel->data(modelIndex, WalletModel::ROLE_PROOF).toBool());
+                (modelIndex.column() == WalletModel::COLUMN_PROOF/* && m_transactionsModel->data(modelIndex, WalletModel::ROLE_PROOF).toBool()*/);
 
         setCursor(showHandCursor ? Qt::PointingHandCursor : Qt::ArrowCursor);
     }

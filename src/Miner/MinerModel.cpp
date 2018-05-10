@@ -9,8 +9,8 @@
 
 #include "MinerModel.h"
 #include "base/settings.h"
-#include "IStream/IMiningManager.h"
-#include "IStream/IPoolMiner.h"
+#include "ISeria/IMiningManager.h"
+#include "ISeria/IPoolMiner.h"
 
 namespace WalletGUI {
 

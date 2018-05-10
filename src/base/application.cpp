@@ -22,10 +22,11 @@
 #include "changepassworddialog.h"
 #include "askpassworddialog.h"
 #include "crashdialog.h"
-#include "importkeydialog.h"
+#include "key/importkeydialog.h"
 #include "createproofdialog.h"
 #include "checkproofdialog.h"
 #include "wallet/walletdparamsdialog.h"
+#include "questiondialog.h"
 
 namespace WalletGUI {
 
@@ -42,7 +43,7 @@ WalletApplication::WalletApplication(int& argc, char** argv)
 {
     setApplicationName("cryptonote"); // do not change becasuse it also changes data directory under Mac and Win
     setApplicationDisplayName(tr("Cryptonote Wallet"));
-    setApplicationVersion("2.0.0");
+    setApplicationVersion("1.0.2");
     setQuitOnLastWindowClosed(false);
     QLocale::setDefault(QLocale::c());
     loadFonts();
@@ -87,7 +88,7 @@ bool WalletApplication::init()
     if (!m_lockFile->tryLock())
     {
         WalletLogger::warning(tr("[Application] Cryptonote wallet GUI already running"));
-        QMessageBox::warning(nullptr, QObject::tr("Fail"), tr("Cryptonote wallet GUI already running"));
+        QMessageBox::warning(nullptr, QObject::tr("Error"), tr("Cryptonote wallet GUI already running"));
         return false;
     }
 
@@ -115,6 +116,8 @@ bool WalletApplication::init()
     connect(m_mainWindow, &MainWindow::createProofSignal, this, &WalletApplication::createProof);
     connect(m_mainWindow, &MainWindow::checkProofSignal, this, &WalletApplication::checkProof);
     connect(m_mainWindow, &MainWindow::showWalletdParamsSignal, this, &WalletApplication::showWalletdParams);
+    connect(m_mainWindow, &MainWindow::exportViewOnlyKeysSignal, this, &WalletApplication::exportViewOnlyKeys);
+    connect(m_mainWindow, &MainWindow::exportKeysSignal, this, &WalletApplication::exportKeys);
 
     connect(m_mainWindow, &MainWindow::createWalletSignal, this, &WalletApplication::createWallet);
     connect(m_mainWindow, &MainWindow::importKeysSignal, this, &WalletApplication::importKeys);
@@ -223,9 +226,9 @@ void WalletApplication::sendTx(const RpcApi::SendTransaction::Request& req)
     walletd_->sendTx(req);
 }
 
-void WalletApplication::sendCreateProof(const QString& txHash, const QString& message)
+void WalletApplication::sendCreateProof(const QString& txHash, const QString& message, const QStringList& addresses)
 {
-    const RpcApi::CreateSendProof::Request req{txHash, message, QStringList{}};
+    const RpcApi::CreateSendProof::Request req{txHash, message, addresses};
     walletd_->createProof(req);
 }
 
@@ -265,6 +268,8 @@ void WalletApplication::runBuiltinWalletd(const QString& walletFile, bool create
     {
         delete walletd_;
         walletd_ = nullptr;
+
+//        walletd_->deleteLater();
     }
 
     splashMsg(tr("Running walletd..."));
@@ -278,12 +283,15 @@ void WalletApplication::runBuiltinWalletd(const QString& walletFile, bool create
     connect(walletd, &BuiltinWalletd::daemonFinishedSignal, this, &WalletApplication::detached);
     connect(walletd, &BuiltinWalletd::requestPasswordSignal, this, &WalletApplication::requestPassword);
     connect(walletd, &BuiltinWalletd::requestPasswordWithConfirmationSignal, this, &WalletApplication::requestPasswordWithConfirmation);
+    connect(walletd, &BuiltinWalletd::requestPasswordForExportSignal, this, &WalletApplication::requestPasswordForExport);
 
     subscribeToWalletd();
     Settings::instance().setConnectionMethod(ConnectionMethod::BUILTIN);
     Settings::instance().setWalletFile(walletFile);
 
     connect(walletd, &BuiltinWalletd::connectedSignal, this, &WalletApplication::builtinRunSignal);
+    connect(this, &WalletApplication::exportViewOnlyKeysSignal, walletd, &BuiltinWalletd::exportViewOnlyKeys);
+    connect(this, &WalletApplication::exportKeysSignal, walletd, &BuiltinWalletd::exportKeys);
 
     walletd_->run();
 }
@@ -336,57 +344,13 @@ void WalletApplication::daemonFinished(int exitCode, QProcess::ExitStatus /*exit
     qDebug("[WalletApplication] Daemon finished. Return code: %s (%d)",
                 metaEnum.valueToKey(static_cast<int>(exitCode)),
                 exitCode);
-//    const QString msg = metaEnum.valueToKey(static_cast<int>(exitCode));
-    bool showPasswordEdit = false;
-    QString msg;
-    switch(exitCode)
-    {
-    case static_cast<int>(BuiltinWalletd::ReturnCode::CRYPTONOTED_DATABASE_ERROR):
-        msg = tr("Database write error. Disk is full or database is corrupted.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::CRYPTONOTED_ALREADY_RUNNING):
-        msg = tr("Cannot run cryptonoted. Another instance of cryptonoted is running.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLETD_BIND_PORT_IN_USE):
-        msg = tr("Cannot run walletd. Walletd bind port in use.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::CRYPTONOTED_BIND_PORT_IN_USE):
-        msg = tr("Cannot run cryptonoted. Cryptonoted bind port in use.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_FILE_READ_ERROR):
-        msg = tr("Cannot read the specified wallet file.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_FILE_UNKNOWN_VERSION):
-        msg = tr("Version of the specified wallet file is unknown.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_FILE_DECRYPT_ERROR):
-        msg = tr("Cannot decrypt the wallet file. The specified password is incorrect or the wallet file is corrupted.");
-//        showPasswordEdit = true;
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_FILE_WRITE_ERROR):
-        msg = tr("Cannot write to the wallet file. Probably your file system is read only.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_FILE_EXISTS):
-        msg = tr("The specified wallet file already exists. Cryptonote wallet could not overwrite an existed file for safety reason. If you want to overwrite the file please remove it manually and try again.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLET_WITH_THE_SAME_VIEWKEY_IN_USE):
-        msg = tr("Another walletd instance is using the specified wallet file or another wallet file with the same view key.");
-        break;
-    case static_cast<int>(BuiltinWalletd::ReturnCode::WALLETD_WRONG_ARGS):
-        msg = tr("Wrong arguments passed to walletd.");
-        break;
-    default:
-        msg = tr("Walletd just crashed. %1. Return code %2. ").arg(walletd->errorString()).arg(exitCode);
-        break;
-    }
+    const QString walletdMsg = BuiltinWalletd::errorMessage(static_cast<BuiltinWalletd::ReturnCode>(exitCode));
+    const QString msg = !walletdMsg.isEmpty() ?
+                            walletdMsg :
+                            tr("Walletd just crashed. %1. Return code %2. ").arg(walletd->errorString()).arg(exitCode);
 
-    if (crashDialog_->execWithReason(msg, showPasswordEdit) == QDialog::Accepted)
-    {
-//        if (showPasswordEdit)
-//            walletd->setPassword(crashDialog_->getPassword());
-//        walletd->run();
+    if (crashDialog_->execWithReason(msg, false) == QDialog::Accepted)
         restartDaemon();
-    }
 }
 
 void WalletApplication::connectToRemoteWalletd()
@@ -476,6 +440,7 @@ void WalletApplication::requestPassword()
     AskPasswordDialog dlg(false, m_mainWindow);
     BuiltinWalletd* walletd = static_cast<BuiltinWalletd*>(walletd_);
     connect(walletd, &BuiltinWalletd::daemonErrorOccurredSignal, &dlg, &AskPasswordDialog::reject);
+    connect(crashDialog_.data(), &CrashDialog::rejected, &dlg, &AskPasswordDialog::reject);
     if (dlg.exec() == QDialog::Accepted)
         walletd->setPassword(dlg.getPassword());
     else
@@ -493,6 +458,24 @@ void WalletApplication::requestPasswordWithConfirmation()
         walletd_->stop();
 }
 
+void WalletApplication::requestPasswordForExport(QProcess* walletd, QString* pass)
+{
+    AskPasswordDialog dlg(false, m_mainWindow);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+    connect(
+            walletd, &QProcess::errorOccurred,
+            &dlg, &AskPasswordDialog::reject);
+#else
+    connect(
+            walletd, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
+            &dlg, &AskPasswordDialog::reject);
+#endif
+
+    if (dlg.exec() == QDialog::Accepted)
+        dlg.getPassword().swap(*pass);
+}
+
 void WalletApplication::requestWalletdAuth(QAuthenticator* authenticator)
 {
     AskPasswordDialog dlg(true, m_mainWindow);
@@ -508,16 +491,35 @@ void WalletApplication::requestWalletdAuth(QAuthenticator* authenticator)
     }
 }
 
-void WalletApplication::createProof(const QString& txHash)
+void WalletApplication::createProof(const QString& txHash, bool needToFind)
 {
+    QStringList addresses;
+
+    if (needToFind)
+    {
+        QuestionDialog qdlg{tr("Question"), tr("Cannot find history for the selected transaction.\nDo you want to try to find appropriate addresses in your address book?"), m_mainWindow};
+        if (qdlg.exec() != QDialog::Accepted)
+            return;
+        for (auto i = addressBookManager_->getAddressCount() - 1; i >= 0; --i)
+            addresses.append(addressBookManager_->getAddress(i).address);
+    }
+
     CreateProofDialog dlg{txHash, m_mainWindow};
-    connect(&dlg, &CreateProofDialog::generateProofSignal, this, &WalletApplication::sendCreateProof);
+
+    connect(&dlg, &CreateProofDialog::generateProofSignal,
+            this,
+            [this, &addresses](const QString& txHash, const QString& message)
+            {
+                sendCreateProof(txHash, message, addresses);
+            });
+
     connect(walletd_, &RemoteWalletd::proofsReceivedSignal,
             &dlg,
             [&dlg](const RpcApi::Proofs& proofs)
             {
                 dlg.addProofs(proofs.send_proofs);
             });
+
     dlg.exec();
 }
 
@@ -541,6 +543,16 @@ void WalletApplication::showWalletdParams()
     BuiltinWalletd* walletd = static_cast<BuiltinWalletd*>(walletd_);
     connect(walletd, &BuiltinWalletd::daemonErrorOccurredSignal, &dlg, &WalletdParamsDialog::reject);
     dlg.exec();
+}
+
+void WalletApplication::exportViewOnlyKeys()
+{
+    emit exportViewOnlyKeysSignal(m_mainWindow, QPrivateSignal{});
+}
+
+void WalletApplication::exportKeys()
+{
+    emit exportKeysSignal(m_mainWindow, QPrivateSignal{});
 }
 
 }

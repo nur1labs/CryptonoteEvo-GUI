@@ -7,7 +7,7 @@
 
 #include <atomic>
 
-#include "IStream/IMinerWorker.h"
+#include "ISeria/IMinerWorker.h"
 
 class QReadWriteLock;
 

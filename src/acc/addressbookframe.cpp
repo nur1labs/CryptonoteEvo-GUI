@@ -10,7 +10,7 @@
 #include "addressbookmodel.h"
 #include "newaddressdialog.h"
 #include "ui_addressbookframe.h"
-#include "mainwindow.h"
+#include "base/mainwindow.h"
 
 namespace WalletGUI
 {

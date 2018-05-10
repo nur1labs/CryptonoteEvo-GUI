@@ -13,29 +13,31 @@ TEMPLATE = app
 
 !win32: QMAKE_CXXFLAGS += -std=c++14 -Wall -Wextra -pedantic
 macx: QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.11
-macx: ICON = images/cryptonote.icns
-win32: RC_ICONS = images/cryptonote.ico
-win32: VERSION = 2.18.3.20
+macx: ICON = images/evonote.icns
+win32: RC_ICONS = images/evonote.ico
+win32: VERSION = 2.18.5.9
 
 #QMAKE_CXXFLAGS += -fno-omit-frame-pointer -fsanitize=address,undefined
 #LIBS += -lasan -lubsan
 
 CONFIG += c++14 strict_c++ no-opengl
 
+DESTDIR = $$PWD/../bin
+
 # copy walletd adjacent to cryptonote-gui binary on all 3 platforms
 win32 {
 WALLETD_BY_SRC_PATH = $$shell_path($$clean_path("$$PWD/../../cryptonote/bin/walletd.exe"))
-CRYPTONOTED_BY_SRC_PATH = $$shell_path($$clean_path("$$PWD/../../cryptonote/bin/cryptonoted.exe"))
-Debug:BY_DST_PATH = $$shell_path($$clean_path("$$OUT_PWD/debug"))
-Release:BY_DST_PATH = $$shell_path($$clean_path("$$OUT_PWD/release"))
+BY_SRC_PATH = $$shell_path($$clean_path("$$PWD/../../cryptonote/bin/cryptonoted.exe"))
+Debug:BY_DST_PATH = $$shell_path($$clean_path("$$DESTDIR"))
+Release:BY_DST_PATH = $$shell_path($$clean_path("$$DESTDIR"))
 copywalletd.commands = $(COPY_FILE) $${WALLETD_BY_SRC_PATH} $${BY_DST_PATH}
-copycryptonoted.commands = $(COPY_FILE) $${CRYPTONOTED_BY_SRC_PATH} $${BY_DST_PATH}
+copycryptonoted.commands = $(COPY_FILE) $${BY_SRC_PATH} $${BY_DST_PATH}
 }else:macx {
-copywalletd.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/walletd $$OUT_PWD/cryptonote-gui.app/Contents/MacOS
-copycryptonoted.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/cryptonoted $$OUT_PWD/cryptonote-gui.app/Contents/MacOS
+copywalletd.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/walletd $$DESTDIR/cryptonote-gui.app/Contents/MacOS
+copycryptonoted.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/cryptonoted $$DESTDIR/cryptonote-gui.app/Contents/MacOS
 }else {
-copywalletd.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/walletd $$OUT_PWD
-copycryptonoted.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/cryptonoted $$OUT_PWD
+copywalletd.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/walletd $$DESTDIR
+copycryptonoted.commands += $(COPY_FILE) $$PWD/../../cryptonote/bin/cryptonoted $$DESTDIR
 }
 first.depends = $(first) copywalletd copycryptonoted
 export(first.depends)
@@ -97,7 +99,8 @@ SOURCES += main.cpp\
     PoolTreeView.cpp \
     createproofdialog.cpp \
     checkproofdialog.cpp \
-    walletdparamsdialog.cpp
+    walletdparamsdialog.cpp \
+    exportkeydialog.cpp
 
 HEADERS  += mainwindow.h \
     signalhandler.h \
@@ -156,7 +159,9 @@ HEADERS  += mainwindow.h \
     PoolTreeView.h \
     createproofdialog.h \
     checkproofdialog.h \
-    walletdparamsdialog.h
+    walletdparamsdialog.h \
+    exportkeydialog.h \
+    version.h
 
 FORMS    += mainwindow.ui \
     overviewframe.ui \
@@ -180,19 +185,20 @@ FORMS    += mainwindow.ui \
     questiondialog.ui \
     createproofdialog.ui \
     checkproofdialog.ui \
-    walletdparamsdialog.ui
+    walletdparamsdialog.ui \
+    exportkeydialog.ui
 
 RESOURCES += \
     resources.qrc \
 
 
-unix|win32: LIBS += -L$$PWD/../../cryptonote/libs/ -lcryptonote-crypto
+unix|win32: LIBS += -L$$PWD/../../evonote/libs/ -levonote-crypto
 
-INCLUDEPATH += $$PWD/../../cryptonote/src
-DEPENDPATH += $$PWD/../../cryptonote/src
+INCLUDEPATH += $$PWD/../../evonote/src
+DEPENDPATH += $$PWD/../../evonote/src
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../cryptonote/libs/cryptonote-crypto.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/../../cryptonote/libs/libcryptonote-crypto.a
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../evonote/libs/evonote-crypto.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/../../evonote/libs/libevonote-crypto.a
 
 # to add necessary dependencies,
 # 1. delete built cryptonote-gui.app to delete old dependencies (dylibs and frameworks)

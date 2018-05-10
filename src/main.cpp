@@ -1,8 +1,6 @@
-#include "contrib.hpp"
-
 #include <QApplication>
 #include <cstdio>
-#include "mainwindow.h"
+#include "base/mainwindow.h"
 #include "base/application.h"
 
 int main(int argc, char *argv[])
