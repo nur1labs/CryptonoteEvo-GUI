@@ -43,3 +43,7 @@ $ cd ../..
 $ git clone https://github.com/Nur1Labs/CryptonoteEvo-GUI.git
 ```
 Now open the project file CryptonoteEvo-GUI/src/cryptonote-gui.pro in QtCreator and build it.
+
+## Donation Support
+
+https://github.com/FndNur1Labs/CryptonoteEvo
